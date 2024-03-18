@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 project(fractal C)
 include(CMakeFindDependencyMacro)
 set(CMAKE_C_STANDARD 23)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories("/usr/local/include")
 include_directories("/usr/local/lib")
@@ -37,10 +36,6 @@ add_executable(fractal app.c
 target_link_libraries(${PROJECT_NAME} raylib)
 
 # Web Configurations
-if (${PLATFORM} STREQUAL "Web")
-    # Tell Emscripten to build an example.html file.
-    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
-endif()
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
 if (APPLE)

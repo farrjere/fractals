@@ -1,7 +1,6 @@
 //
 // Created by Jeremy Farrell on 3/3/24.
 //
-#include <stdio.h>
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 #define ARRAY_BYTES(arr) (sizeof((arr)[0]) * ARRAY_SIZE(arr))
 
@@ -11,8 +10,8 @@
 
 double *mandelbrot(float *xs, float *ys, int height, int width, int maxIter) {
   double *iterations = malloc(height * width * sizeof(double));
-#pragma omp parallel shared(iterations) shared(xs) shared(ys) shared(height) shared(width) \
-    shared(maxIter)
+#pragma omp parallel shared(iterations) shared(xs) shared(ys) shared(height)   \
+    shared(width) shared(maxIter)
   {
 #pragma omp for collapse(2)
     for (int y = 0; y < height; y++) {

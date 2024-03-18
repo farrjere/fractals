@@ -102,13 +102,13 @@ int main(void) {
       cy = (cy - fh / 2.0) + (fh / height) * mouseWorldPos.y;
       mandelbrotArr = setupMandelbrot(height, width, maxIter, cx, cy, fw, fh);
       rerender = true;
-      printf("x %f ", mouseWorldPos.x);
+      /*printf("x %f ", mouseWorldPos.x);
       printf("y %f \n", mouseWorldPos.y);
       printf("cx %f ", cx);
       printf("cy %f\n", cy);
       printf("ox %f ", fw);
       printf("oy %f\n", fh);
-      printf("zoom %f \n", zoom);
+      printf("zoom %f \n", zoom);*/
     }
     BeginDrawing();
     ClearBackground(RAYWHITE);
