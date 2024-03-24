@@ -9,11 +9,11 @@ After installing llvm and libomp you will need to make sure to set your C compil
 
 To build the C version:
 1. from the c folder run: `mkdir build && cd build`
-2. run: `cmake .. -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_C_FLAGS=-fopenmp` 
+2. run: `cmake .. -DCMAKE_C_COMPILER=/opt/homebrew/opt/llvm/bin/clang -DCMAKE_C_FLAGS=-fopenmp  -DCMAKE_BUILD_TYPE=Release`
 3. run: `make` 
 
 To run the C version:
-./fractal <size> <max_iterations>
+./fractal_png <size> <max_iterations>
 where <size> is the height and width of the fractal image to be generated
 
 To build the Python version:
@@ -27,3 +27,4 @@ To run the Python version:
   `python plot.py`
 If you run `python plot.py -h` you can see all the options instead of just accepting the defaults
 
+To run the C fractal visualizer application just type ./fractal from the directory where it was build

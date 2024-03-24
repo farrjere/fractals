@@ -24,10 +24,11 @@ if (NOT raylib_FOUND) # If there's none, fetch and build raylib
   endif()
 endif()
 
+add_executable(fractal_png main.c fractal.c fractal.h rpng.h)
+
 add_executable(fractal app.c
         fractal.c
         fractal.h
-        rpng.h
 )
 
 
