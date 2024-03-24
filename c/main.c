@@ -37,14 +37,9 @@ int main(int argc, char *argv[]) {
         data[(y * width + x) * 3 + 1] = 0;
         data[(y * width + x) * 3 + 2] = 0;
       } else {
-        data[(y * width + x) * 3] =
-            (int)floor((float)iterations / (float)maxIter * 255);
-        data[(y * width + x) * 3 + 1] = (int)floor(
-            (log(iterations) + 1.0 - (float)iterations / (float)maxIter) / 2.0 *
-            255);
-        data[(y * width + x) * 3 + 2] = (int)floorl(
-            (log(iterations) + (1.0 - (float)iterations / (float)maxIter)) *
-            255);
+        data[(y * width + x) * 3] = (int)floor((float)iterations / (float)maxIter * 255);
+        data[(y * width + x) * 3 + 1] = (int)floor((log(iterations) + 1.0 - (float)iterations / (float)maxIter) / 2.0 * 255);
+        data[(y * width + x) * 3 + 2] = (int)floorl((log(iterations) + (1.0 - (float)iterations / (float)maxIter)) * 255);
       }
     }
   }
