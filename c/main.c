@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
     maxIter = atoi(argv[2]);
   }
 
-  float xs[width];
-  float ys[height];
-  float step = 3.0 / width;
-  float p0 = -1.5;
+  long double xs[width];
+  long double ys[height];
+  long double step = 3.0 / width;
+  long double p0 = -1.5;
   for (int i = 0; i < width; i += 1) {
     xs[i] = p0 + step * i;
     ys[i] = p0 + step * i;

@@ -2,13 +2,14 @@
 #include "raylib.h"
 #include <math.h>
 #include <stdbool.h>
-
+#include <stdio.h>
 const int MAXITER = 1000;
-const float ZOOM_INC = 0.97f;
+const float ZOOM_INC = 0.95f;
 struct ZoomSeed {
   int x;
   int y;
   double iterations;
+  int rounds;
 };
 
 // If we are at 0, 0 then we want to fit height x width points in the space of
@@ -18,12 +19,12 @@ struct ZoomSeed {
 // at a center of given a height and width of 600x800 0,0 is at 600/2 800/2 =
 // 300, 400
 double *setupMandelbrot(int winHeight, int winWidth, float centerX, float centerY, float frameWidth, float frameHeight) {
-  float xs[winWidth];
-  float ys[winHeight];
-  float step_x = frameWidth / winWidth;
-  float step_y = frameHeight / winHeight;
-  float x0 = centerX - frameWidth / 2.0;
-  float y0 = centerY - frameHeight / 2.0;
+  long double xs[winWidth];
+  long double ys[winHeight];
+  long double step_x = frameWidth / winWidth;
+  long double step_y = frameHeight / winHeight;
+  long double x0 = centerX - frameWidth / 2.0;
+  long double y0 = centerY - frameHeight / 2.0;
   for (int i = 0; i < winWidth; i += 1) {
     xs[i] = x0 + step_x * i;
   }
@@ -36,17 +37,21 @@ double *setupMandelbrot(int winHeight, int winWidth, float centerX, float center
 }
 
 void renderMandelbrot(double *fractals, int height, int width, struct ZoomSeed *zs) {
+  int stepsSinceM = 10000;
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       double iterations = fractals[y * width + x];
       Color color;
+      stepsSinceM += 1;
       if ((int)iterations == MAXITER) {
         color = BLACK;
+        stepsSinceM = 0;
       } else {
-        if (zs->iterations < iterations) {
+        if (zs->iterations < iterations && stepsSinceM < 10) {
           zs->iterations = iterations;
           zs->x = x;
           zs->y = y;
+          zs->rounds = 0;
         }
         int r = (int)floor((float)iterations / (float)MAXITER * 255);
         int g = (int)floor((log(iterations) + 1.0 - (float)iterations / (float)MAXITER) / 2.0 * 255);
@@ -57,16 +62,17 @@ void renderMandelbrot(double *fractals, int height, int width, struct ZoomSeed *
     }
     DrawPixel(0, 0, RED);
   }
+  zs->rounds += 1;
 }
 
 struct MandelbrotWindow {
-  float cx;
-  float cy;
-  float fw0;
-  float fh0;
+  long double cx;
+  long double cy;
+  long double fw0;
+  long double fh0;
   int height;
   int width;
-  float zoom;
+  long double zoom;
 };
 
 int isManualZoom() {
@@ -101,8 +107,8 @@ double *handleManualZoom(struct MandelbrotWindow *mw, int wheel) {
 
 int main(void) {
   struct MandelbrotWindow mw;
-  mw.height = 600;
-  mw.width = 800;
+  mw.height = 1200;
+  mw.width = 1200;
   mw.cx = 0.0;
   mw.cy = 0.0;
   mw.fw0 = 3.0;
@@ -120,17 +126,23 @@ int main(void) {
     } else {
 
       mw.zoom *= ZOOM_INC;
-      float fw = mw.fw0 * mw.zoom;
-      float fh = mw.fh0 * mw.zoom;
+      long double fw = mw.fw0 * mw.zoom;
+      long double fh = mw.fh0 * mw.zoom;
       mw.cx = (mw.cx - fw / 2.0) + (fw / mw.width) * zs.x;
       mw.cy = (mw.cy - fh / 2.0) + (fh / mw.height) * zs.y;
       zs.x = mw.width / 2;
       zs.y = mw.height / 2;
+
+      printf(" x %Lf, y %Lf, zoom %Lf, fw %Lf, fh %Lf\n", mw.cx, mw.cy, mw.zoom, fw, fh);
       mandelbrotArr = setupMandelbrot(mw.height, mw.width, mw.cx, mw.cy, fw, fh);
     }
     BeginDrawing();
     ClearBackground(RAYWHITE);
     renderMandelbrot(mandelbrotArr, mw.height, mw.width, &zs);
+    if (zs.rounds > 5) {
+      zs.iterations = 0;
+      zs.rounds = 0;
+    }
     EndDrawing();
   }
 
